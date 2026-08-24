@@ -1,0 +1,19 @@
+evaluation_location: frodobots
+evaluator_name: michael.cho@frodobots.com
+session_creation_timestamp: '2025-10-17T08:45:57.934664Z'
+session_completion_timestamp: '2025-10-17T08:52:23.273819Z'
+language_instruction: open the fridge door
+preference: TIE
+longform_feedback: neither policy completed the task
+policies:
+  B:
+    policy_name: paligemma_fast_specialist_droid
+    binary_success: 0
+    partial_success: 0.1
+    duration: 399
+  A:
+    policy_name: paligemma_fast_droid
+    binary_success: 0
+    partial_success: 0.1
+    duration: 399
+

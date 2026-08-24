@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "title": "REDE exploratory research summary",
+  "author": "Jaya Krishna J",
+  "as_of": "2026-08-24",
+  "evidence_status": "exploratory",
+  "reproduction": {
+    "independently_recomputed_in_this_repository": false,
+    "reason": "Raw benchmark predictions, normalized RoboArena metadata, and generated analysis artifacts remain outside Git by design.",
+    "reproduction_commands": "docs/reproducibility.md",
+    "source_reports": [
+      "docs/metric-agreement-findings.md",
+      "docs/public-prediction-ppi-findings.md",
+      "docs/pilot-findings.md"
+    ]
+  },
+  "metric_agreement_study": {
+    "matched_sessions": 3879,
+    "policy_pairs": 28,
+    "mean_absolute_probability_shift_points": 13.0,
+    "mean_absolute_probability_shift_interval95_points": [6.4, 19.6],
+    "decision_changes": 7,
+    "both_policies_failed_fraction": 0.818
+  },
+  "public_prediction_study": {
+    "camera_views": 1000,
+    "policy_episodes": 676,
+    "matched_sessions": 158,
+    "policies": 8,
+    "sites": 12,
+    "released_model_runs": 25,
+    "models_with_complete_twenty_pair_coverage": 24,
+    "complete_models_with_at_least_one_decision_change": 24,
+    "runs_with_median_fixed_ppi_variance_ratio_below_one": 5
+  },
+  "selected_label_efficiency_results": {
+    "roboreward_qwen3_vl_8b": {
+      "status": "post_hoc_best_released_run",
+      "fixed_ppi_interval_width_reduction_approx_percent": [14, 15],
+      "coverage_approx_percent": 95
+    },
+    "gemini_2_5_flash_lite": {
+      "status": "negative_control_example",
+      "fixed_ppi_interval_width_increase_approx_percent": 25,
+      "coverage_approx_percent": 95
+    }
+  },
+  "claims_boundary": [
+    "The benchmark references are human-verified single-verifier references, not independent multi-rater gold labels.",
+    "The target is the finite released benchmark set; external generalization is unverified.",
+    "Model selection and method development inspected released test artifacts, so current label-efficiency results are exploratory.",
+    "Decision changes are descriptive and are not presented as family-wise-error-controlled hypothesis tests.",
+    "No robot-safety, deployment, causal, or certification claim is made."
+  ]
+}

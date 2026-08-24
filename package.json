@@ -1,0 +1,22 @@
+{
+  "name": "robot-evaluation-decision-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bias-aware, sequential decisions for pairwise robot-policy evaluation.",
+  "bin": {
+    "roboeval": "./bin/roboeval.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo:certificate": "node scripts/certificate-demo.js",
+    "check": "npm run check:data-boundary && npm run check:research-package && npm run check:doc-links && npm test",
+    "check:data-boundary": "node scripts/check-data-boundary.js",
+    "check:research-package": "node scripts/check-research-package.js",
+    "check:doc-links": "node scripts/check-doc-links.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
