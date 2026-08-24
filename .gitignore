@@ -31,3 +31,7 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+
+# Superseded local report retained only for reference; maintained faculty artifacts live in docs/.
+/docs/thesis-strengthening-report.docx
+/scripts/build-thesis-strengthening-report.py
