@@ -10,7 +10,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "docs" / "professor-brief.docx"
+OUTPUT = ROOT / "docs" / "research-brief.docx"
 
 INK = "0B2545"
 BLUE = "2E74B5"
@@ -171,7 +171,7 @@ header.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 style_run(header.add_run("RESEARCH PROSPECTUS  |  REDE"), size=8, bold=True, color=MUTED)
 footer = section.footer.paragraphs[0]
 footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
-style_run(footer.add_run("Jaya Krishna J  |  24 August 2026  |  Executable baseline; theorem and multi-rater validation proposed"), size=7.5, color=MUTED)
+style_run(footer.add_run("Jaya Krishna J  |  24 August 2026  |  Thesis research brief"), size=7.5, color=MUTED)
 
 title = doc.add_paragraph()
 title.paragraph_format.space_after = Pt(2)
@@ -236,8 +236,8 @@ note.paragraph_format.space_after = Pt(4)
 style_run(note.add_run("Evidence status: "), size=8.5, bold=True, color=MUTED)
 style_run(note.add_run("exploratory. Released test artifacts informed method selection; the strengthened design separates evaluator audit from inference and adds new multi-rater validation."), size=8.5, italic=True, color=MUTED)
 
-add_heading(doc, "Defensible contribution", 1)
-add_rich_paragraph(doc, [("A verified conservative certificate plus a research-hard graph-aware validity/no-harm target.", True, False, INK)])
+add_heading(doc, "Contribution boundary", 1)
+add_rich_paragraph(doc, [("A verified conservative certificate plus an unresolved graph-aware validity/no-harm target.", True, False, INK)])
 add_rich_paragraph(doc, [("The split-sample Bonferroni baseline now runs and fails closed. For an MASc/MSc, the contribution is its locked multi-rater and shift validation. For a PhD, the thesis must prove cross-fitted simultaneous validity and a high-probability no-harm bound; PPI plus a gate is not enough.", False, False, INK)], after=2)
 
 doc.add_page_break()
@@ -262,7 +262,7 @@ for idx, text in enumerate(("Simultaneous 95% target", "Review-time ratio below 
 set_table_geometry(gates, [3120, 3120, 3120])
 
 add_heading(doc, "Two-track validation", 1)
-add_rich_paragraph(doc, [("The minimum track uses stable public episodes plus new blinded ratings from at least three raters per selected episode; it supports internal validation without waiting for a future release. A prospective lab frame with new tasks, policies, sites, or robot conditions is the preferred external-validation track.", False, False, INK)], after=2)
+add_rich_paragraph(doc, [("The minimum track uses stable public episodes plus new blinded ratings from at least three raters per selected episode; it supports internal validation without waiting for a future release. A prospective evaluation frame with new tasks, policies, sites, or robot conditions is the preferred external-validation track.", False, False, INK)], after=2)
 
 add_heading(doc, "Research assets already built", 1)
 assets = [
@@ -289,7 +289,7 @@ for values in (
     ("1-2", "Graph, margin, theorem target, simulation, ethics/data decision", "Coverage survives adversarial proxies"),
     ("3-4", "Blinded multi-rater pilot and audit/inference split", "Reliability, cost, and support pass"),
     ("5-7", "Locked comparison + graph-aware proof attempt", "Validity/no-harm claim survives"),
-    ("8-9", "Task/site shift or prospective lab validation", "Internal vs external claims separated"),
+    ("8-9", "Task/site shift or prospective validation", "Internal vs external claims separated"),
     ("10-12", "Thesis, protocol archive, reproducibility release", "Claim/privacy/accessibility pass"),
 ):
     row = roadmap.add_row()
@@ -301,7 +301,7 @@ for values in (
         style_run(c.paragraphs[0].add_run(text), size=8.3, bold=idx == 0, color=INK)
 set_table_geometry(roadmap, [900, 4770, 3690])
 
-add_heading(doc, "The supervision decision", 1)
+add_heading(doc, "Open research question", 1)
 ask = doc.add_table(rows=1, cols=1)
 ask.alignment = WD_TABLE_ALIGNMENT.LEFT
 set_table_geometry(ask, [9360])
@@ -310,7 +310,7 @@ set_cell_shading(c, PALE)
 set_cell_border(c, color=PALE)
 p = c.paragraphs[0]
 p.paragraph_format.space_after = Pt(0)
-style_run(p.add_run("Is cross-fitted graph-aware validity/no-harm a thesis-worthy core for this lab—and which prospective evaluation frame would make the robotics claim decisive?"), size=10.5, bold=True, color=INK)
+style_run(p.add_run("Under which assumptions and evaluation frames can cross-fitted graph-aware proxy selection preserve simultaneous validity and improve on human-only inference?"), size=10.5, bold=True, color=INK)
 
 refs = doc.add_paragraph()
 refs.paragraph_format.space_before = Pt(5)
@@ -320,7 +320,7 @@ style_run(refs.add_run("Selected sources: "), size=7.5, bold=True, color=MUTED)
 style_run(refs.add_run("RoboArena; RoboReward; PPI/PPI++; SureSim; Post-hoc Regression; MultiPPI; AM-PPI; Prediction-Powered E-Values. Full novelty and claim boundaries: docs/thesis-proposal.md."), size=7.5, color=MUTED)
 
 doc.core_properties.title = "Decision-safe auto-evaluation of robot policies"
-doc.core_properties.subject = "Professor-facing thesis research prospectus"
+doc.core_properties.subject = "Thesis research brief"
 doc.core_properties.author = "Jaya Krishna J"
 doc.core_properties.keywords = "robot policy evaluation, VLM, prediction-powered inference, thesis proposal"
 for table in doc.tables:

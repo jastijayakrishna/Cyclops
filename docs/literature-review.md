@@ -42,7 +42,7 @@ The defensible PhD candidate contribution is:
 
 > Cross-fitted selective proxy-assisted inference for a clustered policy-comparison graph, with simultaneous coverage after evaluator selection and a high-probability no-harm bound relative to a frozen human-only procedure, evaluated under heterogeneous camera, task, site, and rater-reference shift.
 
-The targeted search found no work directly establishing that combined guarantee for clustered robot-policy video evaluation. This supports a proposal-level gap; it does not prove universal priority, establish the theorem, or justify the phrase “first-ever.” A supervisor or librarian should repeat the search before publication.
+The targeted search found no work directly establishing that combined guarantee for clustered robot-policy video evaluation. This supports a proposal-level gap; it does not prove universal priority, establish the theorem, or justify the phrase “first-ever.” An independent systematic search should be completed before publication.
 
 ## Implications for claims
 

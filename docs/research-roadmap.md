@@ -50,4 +50,4 @@ Use a prospective laboratory frame containing new tasks, policies, sites, or rob
 
 ## Escalation conditions
 
-Stop and request a supervisor decision if the sampling frame changes the estimand; `delta` lacks a defensible operational basis; benchmark licensing, rater compensation, or ethics are ambiguous; matched support is insufficient; cross-edge dependence cannot be represented; or the proposed simultaneous procedure fails its coverage invariant.
+Stop for methodological review if the sampling frame changes the estimand; `delta` lacks a defensible operational basis; benchmark licensing, rater compensation, or ethics are ambiguous; matched support is insufficient; cross-edge dependence cannot be represented; or the proposed simultaneous procedure fails its coverage invariant.

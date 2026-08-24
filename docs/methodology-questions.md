@@ -1,4 +1,4 @@
-# Anticipated professor questions and concise answers
+# Methodology questions and concise answers
 
 ## What is actually novel?
 
@@ -68,6 +68,6 @@ No. It is an evaluation-decision certificate under stated sampling and reference
 
 Yes if bounded to the completed audit, separated certificate, simulation coverage verification, and internal multi-rater validation. For a PhD, a new cross-fitted graph-aware simultaneous-validity/no-harm result is the core contribution, while multi-frame external validation is the preferred empirical confirmation.
 
-## What help is needed from a supervisor?
+## Which design decisions remain open?
 
-The highest-value decisions are the operational basis for `delta`, the acceptable simultaneous error target, rater protocol and ethics, and which prospective evaluation frame could make the external claim decisive.
+The unresolved decisions are the operational basis for `delta`, the acceptable simultaneous error target, rater protocol and ethics, and which prospective evaluation frame can support an external-validity claim.

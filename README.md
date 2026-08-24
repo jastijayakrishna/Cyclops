@@ -1,34 +1,34 @@
 # Robot Evaluation Decision Engine
 
 **Research author:** Jaya Krishna J  
-**Status:** validated research software with exploratory findings and a proposed independent confirmation
+**Status:** validation-stage research software with exploratory findings and a proposed independent confirmation
 
 `roboeval` answers one bounded question: given a baseline policy and a candidate policy, is the candidate better, how uncertain is that conclusion, and what is the cheapest useful evidence to collect next?
 
-This repository is a validation-grade implementation. It supports matched RoboArena comparisons, deterministic Bayesian uncertainty estimates, honest judge calibration when paired judge/human labels exist, and STOP/TEST guidance. It does **not** claim that the public RoboArena dump contains automatic-judge labels: as of the 2026-07-17 snapshot, its session metadata contains human preference and per-policy binary/partial success.
+This repository implements matched RoboArena comparisons, deterministic Bayesian uncertainty estimates, judge calibration when paired judge/human labels exist, and STOP/TEST guidance. It does **not** claim that the public RoboArena dump contains automatic-judge labels: as of the 2026-07-17 snapshot, its session metadata contains human preference and per-policy binary/partial success.
 
-## Professor-facing research package
+## Thesis research package
 
-Start here if you are evaluating the project as thesis research:
+The research design, evidence, software, and limitations are documented here:
 
-- [Supervisor brief](docs/supervisor-brief.md) — two-page research case, evidence, confirmatory design, and supervision question.
-- [Formatted faculty brief](docs/professor-brief.docx) — meeting-ready Word version of the research case.
+- [Research summary](docs/research-summary.md) — concise statement of the question, current evidence, method, and validation plan.
+- [Formatted research brief](docs/research-brief.docx) — two-page Word summary of the research design.
 - [Thesis proposal](docs/thesis-proposal.md) — hypotheses, state of the art, estimand, statistical protocol, ethics, limitations, and twelve-month plan.
-- [Research pitch deck](docs/roboeval-thesis-pitch.pptx) — concise presentation for a faculty meeting.
+- [Thesis overview deck](docs/thesis-overview.pptx) — concise presentation of the problem, evidence, method, and research plan.
 - [Reproducibility contract](docs/reproducibility.md) — repository-level and full empirical reproduction.
 - [Machine-readable evidence index](results/exploratory-summary.json) — exploratory results with explicit provenance and claim boundaries.
-- [Defense questions](docs/defense-questions.md) — direct answers to likely novelty, validity, and inference challenges.
-- [Research roadmap](docs/research-roadmap.md) — two-track evidence plan, degree boundary, and decision gates.
+- [Methodology questions](docs/methodology-questions.md) — concise answers about novelty, validity, estimands, and inference boundaries.
+- [Research roadmap](docs/research-roadmap.md) — two-track evidence plan, scope boundary, and decision gates.
 - [Fail-safe certificate ADR](docs/adr-0003-fail-safe-policy-certificate.md) — separated evaluator gating, human-only fallback, and guarantee boundaries.
-- [Professor red-team review](docs/professor-red-team-review.md) — candid simulated supervision verdict and the bar for MASc/MSc versus PhD novelty.
-- [Faculty-fit map](docs/faculty-fit-map.md) — current Waterloo/U of T research alignment and outreach constraints.
+- [Research-readiness review](docs/research-readiness-review.md) — critical assessment of evidence, novelty, risks, and unresolved work.
+- [Literature review](docs/literature-review.md) — closest related work and the resulting novelty boundary.
 - [Certificate input and claim boundary](docs/certificate-input.md) — runnable conservative baseline contract and explicit non-guarantees.
 
 The central claim is deliberately bounded: episode-level VLM accuracy is not sufficient to establish policy-level decision fidelity. A frozen evaluator may enter simultaneous policy inference only after an independent audit gate; otherwise the certificate abstains to the exact human-only procedure. Savings require coverage, measured review-cost, and unsupported-declaration gates to pass.
 
 The conservative thesis baseline is executable through `roboeval certify`. It checks frozen population membership, session-disjoint audit/inference labels, complete edge support, deterministic proxy gating, simultaneous Bonferroni intervals, and identity with the frozen human-only branch after abstention. It is feasibility evidence—not a claimed graph-aware or physical-safety theorem.
 
-The completed local-review pilot and its limitations are documented in [docs/pilot-findings.md](docs/pilot-findings.md). The no-inference machine-judge study is complete in [docs/public-prediction-ppi-findings.md](docs/public-prediction-ppi-findings.md), and the supervisor-ready research framing is in [docs/thesis-proposal.md](docs/thesis-proposal.md). Large datasets, selected videos, judgments, public prediction artifacts, and generated evidence stay outside Git.
+The completed local-review pilot and its limitations are documented in [docs/pilot-findings.md](docs/pilot-findings.md). The no-inference machine-judge study is complete in [docs/public-prediction-ppi-findings.md](docs/public-prediction-ppi-findings.md), and the complete research design is in [docs/thesis-proposal.md](docs/thesis-proposal.md). Large datasets, selected videos, judgments, public prediction artifacts, and generated evidence stay outside Git.
 
 ## Public machine-judge study (no Ollama and no new labels)
 

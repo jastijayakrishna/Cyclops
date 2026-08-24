@@ -9,12 +9,12 @@ const required = [
   "LICENSE",
   "CITATION.cff",
   "docs/thesis-proposal.md",
-  "docs/supervisor-brief.md",
-  "docs/professor-brief.docx",
-  "docs/roboeval-thesis-pitch.pptx",
+  "docs/research-summary.md",
+  "docs/research-brief.docx",
+  "docs/thesis-overview.pptx",
   "docs/reproducibility.md",
   "docs/research-roadmap.md",
-  "docs/defense-questions.md",
+  "docs/methodology-questions.md",
   "results/exploratory-summary.json",
   "results/README.md",
 ];
@@ -27,10 +27,10 @@ for (const relative of required) {
 for (const relative of [
   "README.md",
   "docs/thesis-proposal.md",
-  "docs/supervisor-brief.md",
+  "docs/research-summary.md",
   "docs/reproducibility.md",
   "docs/research-roadmap.md",
-  "docs/defense-questions.md",
+  "docs/methodology-questions.md",
 ]) {
   const target = path.join(root, relative);
   if (!existsSync(target)) continue;
