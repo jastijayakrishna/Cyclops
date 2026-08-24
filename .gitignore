@@ -1,0 +1,33 @@
+# The RoboArena snapshot is 21.7 GB. Data and generated evidence never belong in Git.
+/data/
+/datasets/
+/.data/
+/.external-data/
+/artifacts/
+/output/
+
+# Raw robotics and tabular dataset payloads.
+*.mp4
+*.mov
+*.avi
+*.npz
+*.npy
+*.parquet
+*.arrow
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Local configuration and tooling.
+.env
+node_modules/
+coverage/
+.build/
+.qa/
+__pycache__/
+*.py[cod]
+*.inspect.ndjson
+*.log
+.DS_Store
+Thumbs.db

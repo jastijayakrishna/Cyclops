@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this research software, please cite this repository and the source benchmarks listed in the thesis proposal."
+title: "Robot Evaluation Decision Engine"
+type: software
+authors:
+  - family-names: "J"
+    given-names: "Jaya Krishna"
+version: 0.1.0
+date-released: 2026-08-24
+license: MIT
+abstract: >-
+  Research software for matched robot-policy comparison, evaluator-distortion
+  analysis, and coverage-checked prediction-powered reconstruction using
+  human-reference and vision-language-model evidence.
+keywords:
+  - robot policy evaluation
+  - vision-language models
+  - prediction-powered inference
+  - benchmark methodology
+  - reproducible research
