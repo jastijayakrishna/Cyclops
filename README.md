@@ -1,136 +1,121 @@
 # Robot Evaluation Decision Engine
 
-**Research author:** Jaya Krishna J  
-**Status:** validation-stage research software with exploratory findings and a proposed independent confirmation
+[![research-software-checks](https://github.com/jastijayakrishna/Cyclops/actions/workflows/ci.yml/badge.svg)](https://github.com/jastijayakrishna/Cyclops/actions/workflows/ci.yml)
 
-`roboeval` answers one bounded question: given a baseline policy and a candidate policy, is the candidate better, how uncertain is that conclusion, and what is the cheapest useful evidence to collect next?
+**Decision-safe evaluation of robot policies when human and vision-language judgments are imperfect.**
 
-This repository implements matched RoboArena comparisons, deterministic Bayesian uncertainty estimates, judge calibration when paired judge/human labels exist, and STOP/TEST guidance. It does **not** claim that the public RoboArena dump contains automatic-judge labels: as of the 2026-07-17 snapshot, its session metadata contains human preference and per-policy binary/partial success.
+`roboeval` answers one bounded question: given a baseline robot policy and a candidate policy, is the candidate better, practically equivalent, or still unresolved—and what evidence should be collected next?
 
-## Thesis research package
+The project studies a failure mode that episode-level evaluator accuracy can hide: small, structured judgment errors may reverse a policy-level conclusion. It combines matched RoboArena comparisons, deterministic uncertainty estimates, evaluator auditing, prediction-powered inference (PPI), and a fail-safe certificate that returns to human-only inference when automated evidence is unreliable.
 
-The research design, evidence, software, and limitations are documented here:
+**Research status:** validation-stage software with completed exploratory studies and an executable conservative baseline. Current results establish feasibility and failure modes; they do not establish external generalization or physical-robot safety.
 
-- [Research summary](docs/research-summary.md) — concise statement of the question, current evidence, method, and validation plan.
-- [Formatted research brief](docs/research-brief.docx) — two-page Word summary of the research design.
-- [Thesis proposal](docs/thesis-proposal.md) — hypotheses, state of the art, estimand, statistical protocol, ethics, limitations, and twelve-month plan.
-- [Thesis overview deck](docs/thesis-overview.pptx) — concise presentation of the problem, evidence, method, and research plan.
-- [Reproducibility contract](docs/reproducibility.md) — repository-level and full empirical reproduction.
-- [Machine-readable evidence index](results/exploratory-summary.json) — exploratory results with explicit provenance and claim boundaries.
-- [Methodology questions](docs/methodology-questions.md) — concise answers about novelty, validity, estimands, and inference boundaries.
-- [Research roadmap](docs/research-roadmap.md) — two-track evidence plan, scope boundary, and decision gates.
-- [Fail-safe certificate ADR](docs/adr-0003-fail-safe-policy-certificate.md) — separated evaluator gating, human-only fallback, and guarantee boundaries.
-- [Research-readiness review](docs/research-readiness-review.md) — critical assessment of evidence, novelty, risks, and unresolved work.
-- [Literature review](docs/literature-review.md) — closest related work and the resulting novelty boundary.
-- [Certificate input and claim boundary](docs/certificate-input.md) — runnable conservative baseline contract and explicit non-guarantees.
+## Research question
 
-The central claim is deliberately bounded: episode-level VLM accuracy is not sufficient to establish policy-level decision fidelity. A frozen evaluator may enter simultaneous policy inference only after an independent audit gate; otherwise the certificate abstains to the exact human-only procedure. Savings require coverage, measured review-cost, and unsupported-declaration gates to pass.
+> Can a vision-language evaluator reduce the human review needed for simultaneous robot-policy decisions while preserving error control—and automatically abstain when the evaluator is weak, biased, or shifted?
 
-The conservative thesis baseline is executable through `roboeval certify`. It checks frozen population membership, session-disjoint audit/inference labels, complete edge support, deterministic proxy gating, simultaneous Bonferroni intervals, and identity with the frozen human-only branch after abstention. It is feasibility evidence—not a claimed graph-aware or physical-safety theorem.
+This is deliberately a policy-decision question, not another episode-scoring benchmark. The unit of analysis is a matched robot-evaluation session; repeated camera views are aggregated within a policy episode before policies are compared.
 
-The completed local-review pilot and its limitations are documented in [docs/pilot-findings.md](docs/pilot-findings.md). The no-inference machine-judge study is complete in [docs/public-prediction-ppi-findings.md](docs/public-prediction-ppi-findings.md), and the complete research design is in [docs/thesis-proposal.md](docs/thesis-proposal.md). Large datasets, selected videos, judgments, public prediction artifacts, and generated evidence stay outside Git.
+## Evidence at a glance
 
-## Public machine-judge study (no Ollama and no new labels)
+The repository contains three completed exploratory analyses. Their shared conclusion is that automated evaluation is useful only conditionally: the metric and evaluator must be tested against the downstream policy decision.
 
-RoboRewardBench publishes raw progress predictions from 25 model runs on a 1,000-view RoboArena subset. Fetch only those public JSON artifacts to an external directory, then join them to the original matched policy sessions:
+| Finding | Evidence | Interpretation |
+|---|---:|---|
+| Human metric choice changed **7 of 28** policy decisions | 3,879 matched sessions; mean absolute shift in `P(candidate better)` of **13.0 percentage points** (95% interval: 6.4–19.6) | The definition of success can matter as much as the evaluator |
+| Every released model with complete coverage changed at least one descriptive policy decision | **24 of 24** complete model runs; 20 eligible policy pairs over 158 matched sessions | Competitive episode scores do not guarantee policy-decision fidelity |
+| Fixed PPI was not universally label-efficient | Only **5 of 25** released runs had a median residual-variance ratio below one | Automated judgments must be validated before use in inference |
+| The strongest released run reduced interval width by about **14–15%** | Post-hoc RoboReward Qwen3-VL 8B example with approximately 95% repeated-sampling coverage | Useful automated evidence can reduce review, but this is exploratory |
+| A weaker evaluator increased interval width and error by about **25%** | Gemini 2.5 Flash-Lite example with approximately 95% coverage | A valid correction can still cost more labels than human-only inference |
 
-```powershell
-node .\scripts\fetch-roboreward-bench.js `
-  --target C:\Users\you\Downloads\roboarena-data\roboreward-bench-v0.0.1
+Proof and claim boundaries:
 
-node .\scripts\public-prediction-ppi-study.js `
-  --population C:\Users\you\Downloads\roboarena-data\normalized-07-17-2026.jsonl `
-  --benchmark-root C:\Users\you\Downloads\roboarena-data\roboreward-bench-v0.0.1 `
-  --output C:\Users\you\Downloads\roboarena-data\roboreward-bench-v0.0.1\policy-ppi-results.json
-```
+- [Machine-readable exploratory evidence index](results/exploratory-summary.json)
+- [Human metric agreement findings](docs/metric-agreement-findings.md)
+- [Public RoboRewardBench prediction and PPI findings](docs/public-prediction-ppi-findings.md)
+- [Frozen local-review pilot findings](docs/pilot-findings.md)
+- [Full reproduction contract](docs/reproducibility.md)
 
-This path downloads no videos and performs no model inference. It aggregates camera views within policy episodes, compares 1-5 VLM progress against the human-verified benchmark reference at the matched-session level, and simulates fixed and adaptive prediction-powered reconstruction. The public judge contract is not the frozen binary/eight-frame pilot prompt, and the single-verifier references are not described as independent gold.
+The checked-in summary is a reviewable index transcribed from the dated reports. Raw benchmark predictions and normalized RoboArena metadata remain outside Git, so the empirical totals are not claimed as independently recomputed from files committed here.
 
-To analyze a non-default result file without overwriting the frozen Gemini artifacts:
+## Working contribution: a fail-safe policy certificate
 
-```powershell
-node .\bin\roboeval.js pilot-analyze `
-  --pilot-dir C:\path\to\external-pilot `
-  --population-input C:\path\to\external-normalized.jsonl `
-  --results-file manual-judge-results.jsonl `
-  --output-prefix manual-pilot
-```
+`roboeval certify` implements the conservative baseline proposed by the research:
 
-## Data boundary
+1. Freeze the policy graph, evaluator, practical margin, and error target.
+2. Audit evaluator utility, bias, and supported shift strata using held-out human labels.
+3. Keep audit sessions separate from policy-inference sessions.
+4. Use fixed PPI only when every prespecified policy edge passes the audit gate.
+5. Otherwise return the exact frozen human-only estimate and interval.
+6. Report simultaneous Bonferroni intervals and one of four decisions: candidate superior, baseline superior, practically equivalent, or unresolved.
 
-The official RoboArena snapshot is 21.7 GB and must remain outside Git. Keep it in a sibling or otherwise external directory, for example:
+The implementation fails closed on session leakage, missing policy edges, weak proxies, biased proxies, and supported shift failures. It is a transparent normal-approximation baseline, not a graph-aware coverage theorem.
 
-```text
-C:\Users\you\Downloads\
-├── REDE\                         # this repository
-└── roboarena-data\
-    └── DataDump_07-17-2026\      # external dataset
-```
-
-The repository ignores common dataset directories and raw video/array/archive formats. `npm run check:data-boundary` also fails if a raw dataset payload or a file larger than 5 MiB appears in the repository. This is a guardrail, not a substitute for reviewing `git status` before committing.
-
-## Quick start
+## Verify it in two minutes
 
 Node.js 22 or newer is the only runtime dependency.
 
 ```powershell
-npm.cmd test
+npm.cmd ci
+npm.cmd run check
+npm.cmd run demo:certificate
+```
 
-# Fetch only the real session YAML required by this milestone. This target is
-# enforced to be outside the repository; media and NPZ files are not downloaded.
+`npm run check` verifies the external-data boundary, required research artifacts, documentation links, and the complete automated test suite.
+
+The zero-download certificate demonstration runs two synthetic cases:
+
+- a helpful proxy must enter the fixed-PPI branch; and
+- a harmful proxy must abstain, with every estimate and interval exactly matching the human-only branch.
+
+The input contract and explicit non-guarantees are documented in [docs/certificate-input.md](docs/certificate-input.md).
+
+## Use the CLI
+
+### Compare two policies using matched evidence
+
+```powershell
+node .\bin\roboeval.js compare `
+  --input C:\path\to\evidence.jsonl `
+  --baseline policy-a `
+  --candidate policy-b
+```
+
+The result includes the observed paired effect, a 95% interval, `P(candidate > baseline)`, a STOP/TEST decision, and a bounded next-evidence recommendation.
+
+### Audit an automatic judge
+
+```powershell
+node .\bin\roboeval.js audit-judge `
+  --input C:\path\to\evidence.jsonl `
+  --group-by policy,task,site
+```
+
+### Run the conservative certificate
+
+```powershell
+node .\bin\roboeval.js certify `
+  --input C:\path\to\certificate-frame.json
+```
+
+### Import public RoboArena metadata
+
+Keep the 21.7 GB official dataset outside this repository. The first-stage importer reads YAML metadata and filenames only; it does not load or copy videos or NPZ contents.
+
+```powershell
 node .\bin\roboeval.js fetch-roboarena-metadata `
-  --target C:\Users\you\Downloads\roboarena-data\DataDump_07-17-2026
+  --target C:\path\outside\this-repository\DataDump_07-17-2026
 
 node .\bin\roboeval.js import-roboarena `
-  --data-root C:\Users\you\Downloads\roboarena-data\DataDump_07-17-2026 `
-  --output C:\Users\you\Downloads\roboarena-data\normalized.jsonl
-
-node .\bin\roboeval.js compare `
-  --input C:\Users\you\Downloads\roboarena-data\normalized.jsonl `
-  --baseline paligemma_fast_droid `
-  --candidate paligemma_fast_specialist_droid
+  --data-root C:\path\outside\this-repository\DataDump_07-17-2026 `
+  --output C:\path\outside\this-repository\normalized.jsonl
 ```
 
-Use `ROBOEVAL_DATA_ROOT` instead of `--data-root` if preferred. Import reads only `global_metadata.yaml`, per-session `metadata.yaml`, and filenames; it never loads video or NPZ contents.
+Detailed commands for the public-prediction study and full empirical reproduction are in [docs/reproducibility.md](docs/reproducibility.md). The local-judge study and its observed limits are documented in [docs/local-judge-feasibility.md](docs/local-judge-feasibility.md); all available CLI workflows are listed by `node .\bin\roboeval.js help`.
 
-The metadata fetch obtains one Git pack with LFS media smudging disabled, checks out only YAML, verifies the session count against `global_metadata.yaml`, and removes the external checkout's `.git` directory. This avoids Windows-incompatible `:` characters in upstream media filenames and avoids transferring media that the first milestone does not consume. Git is required only for this fetch command. A full media download can be added later, to a non-Windows filesystem or with filename remapping, only when a video judge is actually part of the experiment.
+## Evidence schema
 
-## Local judge (no API key, no egress)
-
-`pilot-judge-local` runs the same frozen prompt and verdict schema as the hosted
-judge against a vision model served on this machine, so a judge run costs nothing
-and sends nothing off the box. Frames are sampled with a bundled ffmpeg
-(`python -m pip install imageio-ffmpeg`); results land in
-`local-judge-results.jsonl` and never overwrite an API run.
-
-```powershell
-ollama pull qwen2.5vl:7b   # note: "qwen2.5" is the text model and cannot see frames
-
-node .\bin\roboeval.js pilot-judge-local `
-  --pilot-dir C:\path\to\pilot --model qwen2.5vl:7b --frames 8
-
-node .\bin\roboeval.js pilot-analyze `
-  --pilot-dir C:\path\to\pilot --population-input C:\path\normalized.jsonl `
-  --results-file local-judge-results.jsonl --output-prefix local
-```
-
-A verdict whose confidence is below 0.5 is rejected rather than recorded: scored
-as `P(success)`, such a row lands on the opposite side of the label the model just
-emitted and would invert calibration downstream. Small models hit this constantly,
-so a run that fails this way is reporting a real problem with the judge, not a bug.
-
-To inspect machine-judge error rates on a normalized file that actually contains paired machine/human observations:
-
-```powershell
-node .\bin\roboeval.js audit-judge --input C:\path\evidence.jsonl --group-by policy,task,site
-node .\bin\roboeval.js compare --input C:\path\evidence.jsonl --baseline policy-a --candidate policy-b --calibrate
-```
-
-`--calibrate` fails closed unless every compared policy has enough paired labels and observations from both automatic verdict classes. It never silently substitutes uncalibrated machine labels.
-
-## Normalized evidence schema
-
-One JSON object per line:
+Normalized evidence is JSON Lines with one policy observation per row:
 
 ```json
 {
@@ -148,16 +133,66 @@ One JSON object per line:
 }
 ```
 
-`automatic_judge` and `human` may independently be `null`, but a comparison needs evidence for both selected policies. Video paths are provenance strings; videos are never copied into normalized output.
+`automatic_judge` and `human` may independently be `null`. Missing judge evidence is reported rather than inferred from human success or preference. A matched comparison requires evidence for both selected policies.
 
-## Decision semantics
+## Repository map
 
-- Comparisons use sessions containing both selected policies, preserving RoboArena's matched task/site design.
-- Single-policy or incomplete sessions are retained for provenance and reported at import, but cannot enter a matched comparison.
-- Human-only comparisons use a Jeffreys-prior Dirichlet posterior over the four paired binary outcomes.
-- Calibrated comparisons learn `P(human success | automatic verdict)` separately for each policy, propagate calibration uncertainty, and use human labels directly when present.
-- The default decision threshold is 95% posterior probability. Otherwise the result is `INSUFFICIENT EVIDENCE` and the planner recommends human labels before robot trials when useful unlabeled machine evidence exists.
-- Trial/task guidance is explicitly exploratory until the experiment supplies a frozen task taxonomy and evidence-cost model; it is not yet a proven cost-optimal allocation policy.
-- Monte Carlo results are deterministic for a fixed input and seed.
+```text
+bin/        CLI entry point
+src/        evidence parsing, inference, auditing, judging, and certification
+test/       deterministic unit, integration, negative, and adversarial tests
+scripts/    reproducible study, review, retrieval, and integrity workflows
+results/    lightweight evidence index; no raw datasets
+docs/       research design, findings, ADRs, limitations, and reproduction
+```
 
-This is decision support for a research validation, not a safety certification system or a deployment gate.
+Start with the [documentation map](docs/README.md) for the shortest route to the research summary, evidence, method, and deeper technical material.
+
+## What is established and what remains open
+
+### Established in this repository
+
+- Real matched-policy analyses show that metric and evaluator choice can change policy conclusions.
+- Public VLM predictions can help or harm label efficiency depending on the evaluator.
+- The conservative separated-audit certificate is executable, deterministic, and fail-closed under tested failure modes.
+- Raw datasets and generated evidence are kept outside Git and guarded by an automated boundary check.
+- Empirical findings carry explicit provenance and claim boundaries.
+
+### Open research
+
+- Verify simultaneous coverage under clustered, heterogeneous, missing, and shifted proxy errors.
+- Collect independent blinded multi-rater references and measured review time.
+- Freeze a defensible practical-equivalence margin and worthwhile cost threshold before confirmatory labels are inspected.
+- Test generalization on a new task, site, policy, robot, or institution.
+- Determine whether a cross-fitted graph-aware method can provide a stronger coverage or no-harm guarantee than the conservative baseline.
+
+These open questions separate engineering feasibility from the eventual scientific claim. The intended MASc/MSc contribution is a locked multi-rater and shift validation of the conservative method; a graph-aware validity/no-harm theorem is a deeper, conditional extension.
+
+## Claim boundary
+
+This project does **not** claim:
+
+- that a VLM is robot ground truth;
+- that a released benchmark reference is independent multi-rater gold;
+- that exploratory model selection generalizes to future robots or tasks;
+- that PPI always saves human labels;
+- that the current normal approximation is a graph-aware finite-sample theorem; or
+- that the software certifies physical safety or acts as a deployment gate.
+
+The complete research design, literature boundary, estimand, validation plan, and stopping rules are in the [research summary](docs/research-summary.md) and [thesis proposal](docs/thesis-proposal.md).
+
+## Data boundary
+
+Raw datasets, videos, arrays, archives, judgments, public prediction downloads, and generated empirical outputs must remain outside Git. `npm run check:data-boundary` fails if a common raw-data payload or a file larger than 5 MiB appears in the repository.
+
+The metadata fetch checks out YAML only with Git LFS media smudging disabled, verifies the session count, and removes transport-level Git metadata from the external target. Git is required only for that fetch command.
+
+## Citation and license
+
+The software is released under the [MIT License](LICENSE). Citation metadata is available in [CITATION.cff](CITATION.cff).
+
+**Research author:** Jaya Krishna J
+
+**Version:** 0.1.0
+
+**Evidence status:** exploratory validation with an executable conservative baseline
